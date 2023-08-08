@@ -3,19 +3,19 @@ package com.exampleWebApp.controller;
 import com.exampleWebApp.entity.Photo;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.*;
 
 @RestController
 public class PhotoController {
 
-    private List<Photo> db = List.of(new Photo("1","photo1.jpg"));
+//    private List<Photo> db = List.of(new Photo("1","photo1.jpg"));
     private Map<String, Photo> db1= new HashMap<>(){{
-       put("1", new Photo("1", "Hello1.jpg"));
-        put("2", new Photo("2", "Hello2.jpg"));
-        put("3", new Photo("3", "Hello3.jpg"));
+//       put("1", new Photo("1", "Hello1.jpg"));
     }};
 
     @GetMapping("/Hello")
@@ -43,8 +43,11 @@ public class PhotoController {
     }
 
     @PostMapping("/photo")
-    public Photo create(@RequestBody  @Valid Photo photo){
+    public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
+        Photo photo = new Photo();
      photo.setId(UUID.randomUUID().toString());
+     photo.setFileName(file.getOriginalFilename());
+     photo.setData(file.getBytes());
      db1.put(photo.getId(), photo);
      return photo;
     }

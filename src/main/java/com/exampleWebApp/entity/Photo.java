@@ -15,4 +15,5 @@ public class Photo {
     private String id;
     @NotEmpty
     private String fileName;
+    private byte[] data;
 }
