@@ -11,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class Photo {
     private String id;
+    private String contentType;
     @NotEmpty
     private String fileName;
     @JsonIgnore
