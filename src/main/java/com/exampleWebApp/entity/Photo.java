@@ -1,9 +1,7 @@
 package com.exampleWebApp.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -15,5 +13,6 @@ public class Photo {
     private String id;
     @NotEmpty
     private String fileName;
+    @JsonIgnore
     private byte[] data;
 }

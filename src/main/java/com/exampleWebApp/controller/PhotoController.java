@@ -1,22 +1,24 @@
 package com.exampleWebApp.controller;
 
 import com.exampleWebApp.entity.Photo;
+import com.exampleWebApp.service.PhotoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
 @RestController
 public class PhotoController {
-
-//    private List<Photo> db = List.of(new Photo("1","photo1.jpg"));
-    private Map<String, Photo> db1= new HashMap<>(){{
-//       put("1", new Photo("1", "Hello1.jpg"));
-    }};
+//    private final PhotoService photoService;
+//    public PhotoController(PhotoService photoService) {
+//        this.photoService = photoService;
+//    }
+    @Autowired
+    private  PhotoService photoService;
 
     @GetMapping("/Hello")
     public  String hello(){
@@ -25,30 +27,27 @@ public class PhotoController {
 
     @GetMapping("/photo")
     public Collection<Photo> get(){
-        return  db1.values();
+        return  photoService.get();
     }
 
     @GetMapping("/photo/{id}")
     public Photo get(@PathVariable String id){
-        Photo photo = db1.get(id);
+        Photo photo = photoService.get(id);
 
         if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         return photo;
     }
     @DeleteMapping("/photo/{id}")
     public void delete(@PathVariable String id){
-        Photo photo = db1.remove(id);
+        Photo photo = photoService.remove(id);
         if(photo == null) throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
     }
 
     @PostMapping("/photo")
     public Photo create(@RequestPart("data") MultipartFile file) throws IOException {
-        Photo photo = new Photo();
-     photo.setId(UUID.randomUUID().toString());
-     photo.setFileName(file.getOriginalFilename());
-     photo.setData(file.getBytes());
-     db1.put(photo.getId(), photo);
+
+        Photo photo =photoService.save(file.getOriginalFilename(), file.getBytes());
      return photo;
     }
 
